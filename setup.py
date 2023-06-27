@@ -31,8 +31,8 @@ setup(name='nnunetv2',
           "matplotlib",
           "seaborn",
           "imagecodecs",
-          "yacs"
-          "torchsummary"
+          "yacs",
+          "torchsummary",
           "torchviz"
       ],
       entry_points={

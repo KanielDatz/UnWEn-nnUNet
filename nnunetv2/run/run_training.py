@@ -248,6 +248,12 @@ def run_training_entry():
                     help="Use this to set the device the training should run with. Available options are 'cuda' "
                          "(GPU), 'cpu' (CPU) and 'mps' (Apple M1/M2). Do NOT use this to set which GPU ID! "
                          "Use CUDA_VISIBLE_DEVICES=X nnUNetv2_train [...] instead!")
+    parser.add_argument('-num_epochs', type=int, default=1000, required=False,
+                    help="Number of epochs in each fold")
+    parser.add_argument('-num_of_cycles', type=int, default=1, required=False,
+                    help="Number of cycles in each epoch")
+    parser.add_argument('-gamma', type=float, default=0.5, required=False,
+                    help="Gamma value for cycle stage 2 - the learning rate scheduler will keep constant lr after [gamma] first epochs")
     args = parser.parse_args()
 
     assert args.device in ['cpu', 'cuda', 'mps'], f'-device must be either cpu, mps or cuda. Other devices are not tested/supported. Got: {args.device}.'
@@ -266,7 +272,7 @@ def run_training_entry():
 
     run_training(args.dataset_name_or_id, args.configuration, args.fold, args.tr, args.p, args.pretrained_weights,
                  args.num_gpus, args.use_compressed, args.npz, args.c, args.val, args.disable_checkpointing,
-                 device=device)
+                 device=device, num_epochs=args.num_epochs, num_of_cycles=args.num_of_cycles, gamma=args.gamma)
 
 
 if __name__ == '__main__':
