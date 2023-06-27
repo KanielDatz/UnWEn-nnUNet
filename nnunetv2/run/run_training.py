@@ -34,7 +34,8 @@ def get_trainer_from_args(dataset_name_or_id: Union[int, str],
                           trainer_name: str = 'nnUNetTrainer',
                           plans_identifier: str = 'nnUNetPlans',
                           use_compressed: bool = False,
-                          device: torch.device = torch.device('cuda')):
+                          device: torch.device = torch.device('cuda'),
+                          num_epochs:int = 1000,  num_of_cycles:int = 1, gamma:float = 0.8): #$ added num_of_cycles, epochs and gamma
     # load nnunet class and do sanity checks
     nnunet_trainer = recursive_find_python_class(join(nnunetv2.__path__[0], "training", "nnUNetTrainer"),
                                                 trainer_name, 'nnunetv2.training.nnUNetTrainer')
@@ -56,14 +57,19 @@ def get_trainer_from_args(dataset_name_or_id: Union[int, str],
             raise ValueError(f'dataset_name_or_id must either be an integer or a valid dataset name with the pattern '
                              f'DatasetXXX_YYY where XXX are the three(!) task ID digits. Your '
                              f'input: {dataset_name_or_id}')
+        
+    #$ make sure that num_epochs/num_of_cycles produces an integer
+    if num_epochs % num_of_cycles != 0:
+        raise ValueError('num_epochs devided by num_of_cycles must produce an integer')
 
-    # initialize nnunet trainer
+    #$ initialize nnunet trainer
     preprocessed_dataset_folder_base = join(nnUNet_preprocessed, maybe_convert_to_dataset_name(dataset_name_or_id))
     plans_file = join(preprocessed_dataset_folder_base, plans_identifier + '.json')
     plans = load_json(plans_file)
     dataset_json = load_json(join(preprocessed_dataset_folder_base, 'dataset.json'))
     nnunet_trainer = nnunet_trainer(plans=plans, configuration=configuration, fold=fold,
-                                    dataset_json=dataset_json, unpack_dataset=not use_compressed, device=device)
+                                    dataset_json=dataset_json, unpack_dataset=not use_compressed, device=device,
+                                    num_epochs = num_epochs,  num_of_cycles = num_of_cycles, gamma = gamma)  #$ added num_of_cycles, epochs and gamma
     return nnunet_trainer
 
 
@@ -107,12 +113,13 @@ def cleanup_ddp():
     dist.destroy_process_group()
 
 
-def run_ddp(rank, dataset_name_or_id, configuration, fold, tr, p, use_compressed, disable_checkpointing, c, val, pretrained_weights, npz, world_size):
+def run_ddp(rank, dataset_name_or_id, configuration, fold, tr, p, use_compressed, disable_checkpointing, c, val, pretrained_weights, npz, world_size, num_epochs, num_of_cycles, gamma):
     setup_ddp(rank, world_size)
     torch.cuda.set_device(torch.device('cuda', dist.get_rank()))
 
+    #$ add num_epochs, num_of_cycles and gamma to kwargs
     nnunet_trainer = get_trainer_from_args(dataset_name_or_id, configuration, fold, tr, p,
-                                           use_compressed)
+                                           use_compressed, num_epochs, num_of_cycles, gamma) #$ added num_of_cycles, epochs and gamma
 
     if disable_checkpointing:
         nnunet_trainer.disable_checkpointing = disable_checkpointing
@@ -143,7 +150,8 @@ def run_training(dataset_name_or_id: Union[str, int],
                  continue_training: bool = False,
                  only_run_validation: bool = False,
                  disable_checkpointing: bool = False,
-                 device: torch.device = torch.device('cuda')):
+                 device: torch.device = torch.device('cuda'),
+                 num_epochs:int = 1000, num_of_cycles:int = 1, gamma:float = 0.8): #$ added num_epochs, num_of_cycles and gamma
     if isinstance(fold, str):
         if fold != 'all':
             try:
@@ -174,12 +182,18 @@ def run_training(dataset_name_or_id: Union[str, int],
                      only_run_validation,
                      pretrained_weights,
                      export_validation_probabilities,
-                     num_gpus),
+                     num_gpus,
+                     num_epochs,
+                     num_of_cycles,
+                     gamma),
                  nprocs=num_gpus,
                  join=True)
+        
+
     else:
         nnunet_trainer = get_trainer_from_args(dataset_name_or_id, configuration, fold, trainer_class_name,
-                                               plans_identifier, use_compressed_data, device=device)
+                                               plans_identifier, use_compressed_data, device=device,
+                                               num_epochs= num_epochs , num_of_cycles = num_of_cycles, gamma = gamma) #$ added num_epochs, num_of_cycles and gamma
 
         if disable_checkpointing:
             nnunet_trainer.disable_checkpointing = disable_checkpointing

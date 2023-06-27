@@ -3,11 +3,7 @@ from dynamic_network_architectures.building_blocks.helper import convert_dim_to_
 from dynamic_network_architectures.initialization.weight_init import init_last_bn_before_add_to_0, InitWeights_He
 from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from nnunetv2.utilities.plans_handling.plans_handler import ConfigurationManager, PlansManager
-from nnunetv2.paths import nnUNet_results, nnUNet_raw
-from torch import nn , randn
-from torchsummary import summary
-from torchviz import make_dot
-
+from torch import nn
 
 
 class nnUNetTrainerBN(nnUNetTrainer):
@@ -74,26 +70,4 @@ class nnUNetTrainerBN(nnUNetTrainer):
         model.apply(InitWeights_He(1e-2))
         if network_class == ResidualEncoderUNet:
             model.apply(init_last_bn_before_add_to_0)
-
-        #$ Display the model summary
-        try:
-            input_shape = (160,160)
-            summary(model, input_size=(num_input_channels, input_shape))
-
-            # Create a dummy input tensor
-            dummy_input = randn(1, num_input_channels, input_shape)
-
-            # Generate a graph of the model architecture
-            graph = make_dot(model(dummy_input), params=dict(model.named_parameters()))
-
-            # Save the graph as an image
-            nnUNet_results.joinpath("model_architecture").mkdir(exist_ok=True)
-            path = nnUNet_results.joinpath("model_architecture", "model_architecture.png")
-            graph.render(path, format="png")
-
-            print("model summary saved to ", path)
-        except:
-            print("Could not save the model summary")
-
-
         return model

@@ -66,7 +66,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 
 class nnUNetTrainer(object):
     def __init__(self, plans: dict, configuration: str, fold: int, dataset_json: dict, unpack_dataset: bool = True,
-                 device: torch.device = torch.device('cuda')):
+                 device: torch.device = torch.device('cuda'), num_epochs:int = 1200,  num_of_cycles: int = 1, gamma: float = 0.8):
         # From https://grugbrain.dev/. Worth a read ya big brains ;-)
 
         # apex predator of grug is complexity
@@ -137,13 +137,18 @@ class nnUNetTrainer(object):
                 if self.is_cascaded else None
 
         ### Some hyperparameters for you to fiddle with
-        self.initial_lr = 1e-2
+        #$ Hyperparameters for training; 
+        self.initial_lr = 1e-1
         self.weight_decay = 3e-5
         self.oversample_foreground_percent = 0.33
         self.num_iterations_per_epoch = 250
         self.num_val_iterations_per_epoch = 50
-        self.num_epochs = 1000
+        self.num_epochs = num_epochs
         self.current_epoch = 0
+        self.num_of_cycles = num_of_cycles #$ set C - number of cycles. If set to 1 (defult), then we have a standard nnUNet training
+        self.gamma = gamma  #$ set gamma for step two in each cycle, defult is 0.8
+        self.exponent = 0.9 
+
 
         ### Dealing with labels/regions
         self.label_manager = self.plans_manager.get_label_manager(dataset_json)
@@ -178,6 +183,7 @@ class nnUNetTrainer(object):
 
         ### checkpoint saving stuff
         self.save_every = 50
+        self.save_last = 10
         self.disable_checkpointing = False
 
         ## DDP batch size and oversampling can differ between workers and needs adaptation
@@ -458,7 +464,7 @@ class nnUNetTrainer(object):
     def configure_optimizers(self):
         optimizer = torch.optim.SGD(self.network.parameters(), self.initial_lr, weight_decay=self.weight_decay,
                                     momentum=0.99, nesterov=True)
-        lr_scheduler = PolyLRScheduler(optimizer, self.initial_lr, self.num_epochs)
+        lr_scheduler = PolyLRScheduler(optimizer, self.initial_lr, self.num_epochs, self.num_of_cycles, self.gamma, self.exponent)
         return optimizer, lr_scheduler
 
     def plot_network_architecture(self):
@@ -1011,8 +1017,17 @@ class nnUNetTrainer(object):
 
         # handling periodic checkpointing
         current_epoch = self.current_epoch
+        
         if (current_epoch + 1) % self.save_every == 0 and current_epoch != (self.num_epochs - 1):
             self.save_checkpoint(join(self.output_folder, 'checkpoint_latest.pth'))
+
+        #$ handeling cyclic checkpoitns
+        Tc = self.num_epochs/self.num_of_cycles
+        saving_threshold = Tc - self.save_last 
+        if (current_epoch + 1) % Tc >= saving_threshold and current_epoch != self.num_epochs:
+            print('->>>>>>>> saved checkpoint as : ' + join(self.output_folder  ,'checkpoint_{}.pth'.format(current_epoch)))
+            self.save_checkpoint(join(self.output_folder  ,'checkpoint_{}.pth'.format(current_epoch)))
+            
 
         # handle 'best' checkpointing. ema_fg_dice is computed by the logger and can be accessed like this
         if self._best_ema is None or self.logger.my_fantastic_logging['ema_fg_dice'][-1] > self._best_ema:

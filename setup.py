@@ -32,6 +32,8 @@ setup(name='nnunetv2',
           "seaborn",
           "imagecodecs",
           "yacs"
+          "torchsummary"
+          "torchviz"
       ],
       entry_points={
           'console_scripts': [
