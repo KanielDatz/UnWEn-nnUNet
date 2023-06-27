@@ -1,9 +1,9 @@
 # Welcome to UnWEn-nnU-Net!
 # UnWEn-nnU-Net stands for Uncertainty Weighted Ensemble no new U-Net
 # This is a fork of the amazing work on nn-Unet.
-Click [here](https://github.com/MIC-DKFZ/nnUNet/tree/nnunetv1) if you were looking for the old one instead.
 
-Coming from V1? Check out the [TLDR Migration Guide](documentation/tldr_migration_guide_from_v1.md). Reading the rest of the documentation is still strongly recommended ;-)
+
+
 
 # What is nnU-Net?
 Image datasets are enormously diverse: image dimensionality (2D, 3D), modalities/input channels (RGB image, CT, MRI, microscopy, ...), 
@@ -112,17 +112,6 @@ models allow much better initialization. Foundation models are not supported by 
 they 1) are not useful for segmentation problems that deviate from the standard setting (see above mentioned 
 datasets), 2) would typically only support 2D architectures and 3) conflict with our core design principle of carefully adapting 
 the network topology for each dataset (if the topology is changed one can no longer transfer pretrained weights!) 
-
-## What happened to the old nnU-Net?
-The core of the old nnU-Net was hacked together in a short time period while participating in the Medical Segmentation 
-Decathlon challenge in 2018. Consequently, code structure and quality were not the best. Many features 
-were added later on and didn't quite fit into the nnU-Net design principles. Overall quite messy, really. And annoying to work with.
-
-nnU-Net V2 is a complete overhaul. The "delete everything and start again" kind. So everything is better 
-(in the author's opinion haha). While the segmentation performance [remains the same](https://docs.google.com/spreadsheets/d/13gqjIKEMPFPyMMMwA1EML57IyoBjfC3-QCTn4zRN_Mg/edit?usp=sharing), a lot of cool stuff has been added. 
-It is now also much easier to use it as a development framework and to manually fine-tune its configuration to new 
-datasets. A big driver for the reimplementation was also the emergence of [Helmholtz Imaging](http://helmholtz-imaging.de), 
-prompting us to extend nnU-Net to more image formats and domains. Take a look [here](documentation/changelog.md) for some highlights.
 
 # Acknowledgements
 <img src="documentation/assets/HI_Logo.png" height="100px" />
