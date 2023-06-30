@@ -1,10 +1,6 @@
-# Welcome to UnWEn-nnU-Net!
-# UnWEn-nnU-Net stands for Uncertainty Weighted Ensemble no new U-Net
-# This is a fork of the amazing work on nn-Unet.
-
-
-
-
+# Welcome to U-nnU-Net!
+# U-nnU-Net stands for Uncertainty measure of nnU-Net
+The nnU-Net is widely recognized for its exceptional performance in image segmentation tasks. However, one limitation of nnU-Net is the lack of a measure to indicate the possibility of failure or uncertainty, particularly in large-scale image segmentation applications with heterogeneous data. To address this issue, this project introduces a novel method to estimate uncertainty in nnU-Net for cardiac MRI scans.
 # What is nnU-Net?
 Image datasets are enormously diverse: image dimensionality (2D, 3D), modalities/input channels (RGB image, CT, MRI, microscopy, ...), 
 image sizes, voxel sizes, class ratio, target structure properties and more change substantially between datasets. 
@@ -30,8 +26,14 @@ Please cite the [following paper](https://www.google.com/url?q=https://www.natur
 
     Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2021). nnU-Net: a self-configuring 
     method for deep learning-based biomedical image segmentation. Nature methods, 18(2), 203-211.
+## Approach
+The project employed several steps to estimate the uncertainty in nnU-Net. First, the learning rate was modified to utilize cyclic learning rate (clr) technique. By changing the learning rate in a cyclic manner, the model's convergence to multiple minima was ensured. At each of these minima, multiple checkpoints were extracted from the model.
 
+Next, an ensemble approach was adopted by aggregating the predictions (probabilities) of each class from the extracted checkpoints. This ensemble of predictions was then used to calculate the entropy of both classes. The entropy of each image was summed, and normalization was achieved by dividing the sum by the contour of the image.
 
+Using this process, an uncertainty score was obtained for each image. To evaluate the relationship between uncertainty and accuracy, the correlation between the uncertainty score and the Dice coefficient was examined. The Dice coefficient is a common metric used to assess the similarity between predicted and ground truth segmentations.
+##
+#######################################################################
 ## What can nnU-Net do for you?
 If you are a **domain scientist** (biologist, radiologist, ...) looking to analyze your own images, nnU-Net provides 
 an out-of-the-box solution that is all but guaranteed to provide excellent results on your individual dataset. Simply 
