@@ -3,6 +3,7 @@ This respiratory is a part of final project course in Deep Learning 046211
 
 By Daniel Katz and Natalie Mendelson
 
+
 # Overview
 The nnU-Net is widely recognized for its exceptional performance in image segmentation tasks. However, one limitation of nnU-Net is the lack of a measure to indicate the possibility of failure or uncertainty, particularly in large-scale image segmentation applications with heterogeneous data. To address this issue, this project introduces a novel method to estimate uncertainty in nnU-Net for cardiac MRI scans. U-nnU-Net stands for Uncertainty measure of nnU-Net segmentations.
 # What is nnU-Net?
@@ -39,10 +40,13 @@ First, the learning rate was modified to utilize cyclic learning rate (clr) tech
 By changing the learning rate in a cyclic manner, the model's convergence to multiple minima was ensured. At each of these minima, multiple checkpoints were extracted from the model.
 
 Next, an ensemble approach was adopted by aggregating the predictions (probabilities) of each class from the extracted checkpoints. This ensemble of predictions was then used to calculate the entropy of both classes. The entropy of each image was summed, and normalization was achieved by dividing the sum by the contour of the labeled segmentation.
+
 <img width="113" alt="image" src="https://github.com/KanielDatz/UnWEn-nnUNet/assets/128894307/48c68c25-30e8-47bf-aa4d-3594aa7ca692">
 <img width="114" alt="image" src="https://github.com/KanielDatz/UnWEn-nnUNet/assets/128894307/43695fe5-054e-4e29-93e2-718469cc3668">
+
 ## Results 
 Using this process, an uncertainty score was obtained for each image. To evaluate the relationship between uncertainty and accuracy, the correlation between the uncertainty score and the Dice coefficient was examined. The Dice coefficient is a common metric used to assess the similarity between predicted and ground truth segmentations.
+
 <img width="287" alt="image" src="https://github.com/KanielDatz/UnWEn-nnUNet/assets/128894307/20c98ec7-af72-4a8e-919e-fefc9b4242b8">
 
 
