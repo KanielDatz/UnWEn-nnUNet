@@ -1,48 +1,43 @@
-# Welcome to U-nnU-Net!
-This respiratory is a part of final project course in Deep Learning 046211
+# Welcome to UnnUNet!
 
-By Daniel Katz and Natalie Mendelson
-
+**This repisatory is a part of our final project in [EE046211 Deep Learning course](https://github.com/taldatech/ee046211-deep-learning) in the [Technion - Israel Institute of Technology](https://en.wikipedia.org/wiki/Technion_%E2%80%93_Israel_Institute_of_Technology)
+By Daniel Katz and Natalie Mendelson, spring 2023**
+- [  Welcome to UnnUNet!](# Welcome to UnnUNet!)
+  * [Overview](#Overview)
+  * [ Approach](#Approach)
 
 # Overview
-The nnU-Net is widely recognized for its exceptional performance in image segmentation tasks. However, one limitation of nnU-Net is the lack of a measure to indicate the possibility of failure or uncertainty, particularly in large-scale image segmentation applications with heterogeneous data. To address this issue, this project introduces a novel method to estimate uncertainty in nnU-Net for cardiac MRI scans. U-nnU-Net stands for Uncertainty measure of nnU-Net segmentations.
-# What is nnU-Net?
-Image datasets are enormously diverse: image dimensionality (2D, 3D), modalities/input channels (RGB image, CT, MRI, microscopy, ...), 
-image sizes, voxel sizes, class ratio, target structure properties and more change substantially between datasets. 
-Traditionally, given a new problem, a tailored solution needs to be manually designed and optimized  - a process that 
-is prone to errors, not scalable and where success is overwhelmingly determined by the skill of the experimenter. Even 
-for experts, this process is anything but simple: there are not only many design choices and data properties that need to 
-be considered, but they are also tightly interconnected, rendering reliable manual pipeline optimization all but impossible! 
+**Motivation**
+Detecting segmentation model errors is **crucial** in medical imaging due to the consequences of mistakes in this field.
+Segmentation model performance is usually measured using metrics as Intersection-Over-Union or Dice Coefficient. but these are relevant only when ground truth is present.
+**During inference, we don't have ground truth.**
+**Our goal is to introduces a method to estimate models' prediction uncertainty for medical image segmentation **
 
-![nnU-Net overview](documentation/assets/nnU-Net_overview.png)
+**Model** 
+We implemented our method on [nnUNet](https://github.com/MIC-DKFZ/nnUNet).
+nnU-Net is a semantic segmentation method that automatically adapts to a given dataset. It will analyze the provided training cases and automatically configure a matching U-Net-based segmentation pipeline. 
+nnU-Net is widely recognized for its exceptional performance in image segmentation tasks. However, one limitation of nnU-Net is the lack of a measure to indicate the possibility of failure or uncertainty, particularly in large-scale image segmentation applications with heterogeneous data. This is the issue we adress in our project.
+If you are not familiar with nnUNet we advice you to take a look at [nnUNet git](https://github.com/MIC-DKFZ/nnUNet) and [paper.](https://www.nature.com/articles/s41592-020-01008-z)
 
-**nnU-Net is a semantic segmentation method that automatically adapts to a given dataset. It will analyze the provided 
-training cases and automatically configure a matching U-Net-based segmentation pipeline. No expertise required on your 
-end! You can simply train the models and use them for your application**.
+**Dataset**
+We used a [publicly availible](https://cardiacmr.hms.harvard.edu/downloads-0) dataset from Harvard [Cardiac MR Center Dataverse](https://github.com/HMS-CardiacMR).
+It contains cardiac T1 weighted images for 210 patients, 5 slices per patient and 11 T1-weighted image per slice.
+Manual contours for Epi- and Endocardial contours are provided for each T1-weighted image.
+Total of ~11.5K images and labels.
 
-Upon release, nnU-Net was evaluated on 23 datasets belonging to competitions from the biomedical domain. Despite competing 
-with handcrafted solutions for each respective dataset, nnU-Net's fully automated pipeline scored several first places on 
-open leaderboards! Since then nnU-Net has stood the test of time: it continues to be used as a baseline and method 
-development framework ([9 out of 10 challenge winners at MICCAI 2020](https://arxiv.org/abs/2101.00232) and 5 out of 7 
-in MICCAI 2021 built their methods on top of nnU-Net, 
- [we won AMOS2022 with nnU-Net](https://amos22.grand-challenge.org/final-ranking/))!
-
-Please cite the [following paper](https://www.google.com/url?q=https://www.nature.com/articles/s41592-020-01008-z&sa=D&source=docs&ust=1677235958581755&usg=AOvVaw3dWL0SrITLhCJUBiNIHCQO) when using nnU-Net:
-
-    Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2021). nnU-Net: a self-configuring 
-    method for deep learning-based biomedical image segmentation. Nature methods, 18(2), 203-211.
-    
-## Approach
-The project employed several steps to estimate the uncertainty in nnU-Net. 
-First, the learning rate was modified to utilize cyclic learning rate (clr) technique.
-<img width="669" alt="image" src="https://github.com/KanielDatz/UnWEn-nnUNet/assets/128894307/1c6e65da-6f00-4210-8f9c-43be4a92a519">
+# Approach
+The project employed several steps to estimate the uncertainty of nnU-Net predictions. 
+Learning rate was modified to utilize cyclic learning rate (clr) technique.
+<img width="600" alt="Cyclic lr" src="https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/assets/cyclicLr.png?raw=true">
 
 By changing the learning rate in a cyclic manner, the model's convergence to multiple minima was ensured. At each of these minima, multiple checkpoints were extracted from the model.
 
+<img width="600" alt="Cyclic lr" src="https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/assets/progress.png?raw=true">
+
 Next, an ensemble approach was adopted by aggregating the predictions (probabilities) of each class from the extracted checkpoints. This ensemble of predictions was then used to calculate the entropy of both classes. The entropy of each image was summed, and normalization was achieved by dividing the sum by the contour of the labeled segmentation.
 
-<img width="113" alt="image" src="https://github.com/KanielDatz/UnWEn-nnUNet/assets/128894307/48c68c25-30e8-47bf-aa4d-3594aa7ca692">
-<img width="114" alt="image" src="https://github.com/KanielDatz/UnWEn-nnUNet/assets/128894307/43695fe5-054e-4e29-93e2-718469cc3668">
+<img width="113" alt="image" src="https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/assets/cyclicLr.png?raw=true">
+<img width="114" alt="image" src="https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/assets/cyclicLr.png?raw=true">
 
 ## Results 
 Using this process, an uncertainty score was obtained for each image. To evaluate the relationship between uncertainty and accuracy, the correlation between the uncertainty score and the Dice coefficient was examined. The Dice coefficient is a common metric used to assess the similarity between predicted and ground truth segmentations.
