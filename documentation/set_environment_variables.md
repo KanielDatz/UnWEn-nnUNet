@@ -11,9 +11,9 @@ Variables can either be set permanently (recommended!) or you can decide to set 
 Locate the `.bashrc` file in your home folder and add the following lines to the bottom:
 
 ```bash
-export nnUNet_raw="/media/fabian/nnUNet_raw"
-export nnUNet_preprocessed="/media/fabian/nnUNet_preprocessed"
-export nnUNet_results="/media/fabian/nnUNet_results"
+export UnnUNet_raw="/media/fabian/UnnUNet_raw"
+export UnnUNet_preprocessed="/media/fabian/UnnUNet_preprocessed"
+export UnnUNet_results="/media/fabian/UnnUNet_results"
 ```
 
 (of course you need to adapt the paths to the actual folders you intend to use).
@@ -22,9 +22,9 @@ If you are using a different shell, such as zsh, you will need to find the corre
 ## Temporary
 Just execute the following lines whenever you run nnU-Net:
 ```bash
-export nnUNet_raw="/media/fabian/nnUNet_raw"
-export nnUNet_preprocessed="/media/fabian/nnUNet_preprocessed"
-export nnUNet_results="/media/fabian/nnUNet_results"
+export UnnUNet_raw="/media/fabian/UnnUNet_raw"
+export UnnUNet_preprocessed="/media/fabian/UnnUNet_preprocessed"
+export UnnUNet_results="/media/fabian/UnnUNet_results"
 ```
 (of course you need to adapt the paths to the actual folders you intend to use).
 
@@ -33,10 +33,10 @@ terminal window and DO NOT transfer to other terminals!
 
 Alternatively you can also just prefix them to your nnU-Net commands:
 
-`nnUNet_results="/media/fabian/nnUNet_results" nnUNet_preprocessed="/media/fabian/nnUNet_preprocessed" nnUNetv2_train[...]`
+`UnnUNet_results="/media/fabian/UnnUNet_results" UnnUNet_preprocessed="/media/fabian/UnnUNet_preprocessed" UnnUNetv2_train[...]`
 
 ## Verify that environment parameters are set
-You can always execute `echo ${nnUNet_raw}` etc to print the environment variables. This will return an empty string if 
+You can always execute `echo ${UnnUNet_raw}` etc to print the environment variables. This will return an empty string if 
 they were not set.
 
 # Windows
@@ -53,16 +53,16 @@ Just execute the following before you run nnU-Net:
 
 (powershell)
 ```powershell
-$Env:nnUNet_raw = "/media/fabian/nnUNet_raw"
-$Env:nnUNet_preprocessed = "/media/fabian/nnUNet_preprocessed"
-$Env:nnUNet_results = "/media/fabian/nnUNet_results"
+$Env:UnnUNet_raw = "/media/fabian/UnnUNet_raw"
+$Env:UnnUNet_preprocessed = "/media/fabian/UnnUNet_preprocessed"
+$Env:UnnUNet_results = "/media/fabian/UnnUNet_results"
 ```
 
 (command prompt)
 ```commandline
-set nnUNet_raw="/media/fabian/nnUNet_raw"
-set nnUNet_preprocessed="/media/fabian/nnUNet_preprocessed"
-set nnUNet_results="/media/fabian/nnUNet_results"
+set UnnUNet_raw="/media/fabian/UnnUNet_raw"
+set UnnUNet_preprocessed="/media/fabian/UnnUNet_preprocessed"
+set UnnUNet_results="/media/fabian/UnnUNet_results"
 ```
 
 (of course you need to adapt the paths to the actual folders you intend to use).
