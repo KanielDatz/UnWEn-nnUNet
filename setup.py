@@ -57,7 +57,9 @@ setup(name='nnunetv2',
               'nnUNetv2_move_plans_between_datasets = nnunetv2.experiment_planning.plans_for_pretraining.move_plans_between_datasets:entry_point_move_plans_between_datasets',  # api available
               'nnUNetv2_evaluate_folder = nnunetv2.evaluation.evaluate_predictions:evaluate_folder_entry_point',  # api available
               'nnUNetv2_evaluate_simple = nnunetv2.evaluation.evaluate_predictions:evaluate_simple_entry_point',  # api available
-              'nnUNetv2_convert_MSD_dataset = nnunetv2.dataset_conversion.convert_MSD_dataset:entry_point'  # api available
+              'nnUNetv2_convert_MSD_dataset = nnunetv2.dataset_conversion.convert_MSD_dataset:entry_point',  # api available
+              'UnnUnet_predict_from_folder = nnunetv2.unnunet.predict_from_folder:predict_from_folder_entry'
+              'UnnUnet_run_uncertainty_on_fold = nnunetv2.unnunet.run_uncertainty_on_fold:run_uncertainty_on_fold_entry'
           ],
       },
       keywords=['deep learning', 'image segmentation', 'medical image analysis',

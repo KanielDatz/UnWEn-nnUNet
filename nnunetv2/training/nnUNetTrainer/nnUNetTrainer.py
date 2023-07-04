@@ -66,7 +66,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 
 class nnUNetTrainer(object):
     def __init__(self, plans: dict, configuration: str, fold: int, dataset_json: dict, unpack_dataset: bool = True,
-                 device: torch.device = torch.device('cuda'), num_epochs:int = 1200,  num_of_cycles: int = 1, gamma: float = 0.8):
+                 device: torch.device = torch.device('cuda'), num_epochs:int = 1200,  num_of_cycles: int = 1, gamma: float = 0.8 ,rule:str = 'both'):
         # From https://grugbrain.dev/. Worth a read ya big brains ;-)
 
         # apex predator of grug is complexity
@@ -148,6 +148,7 @@ class nnUNetTrainer(object):
         self.num_of_cycles = num_of_cycles #$ set C - number of cycles. If set to 1 (defult), then we have a standard nnUNet training
         self.gamma = gamma  #$ set gamma for step two in each cycle, defult is 0.8
         self.exponent = 0.9 
+        self.rule = rule #$ set rule for saving checkpoints, defult is 'both' 
 
 
         ### Dealing with labels/regions
@@ -1022,12 +1023,32 @@ class nnUNetTrainer(object):
             self.save_checkpoint(join(self.output_folder, 'checkpoint_latest.pth'))
 
         #$ handeling cyclic checkpoitns
+        
         Tc = self.num_epochs/self.num_of_cycles
-        saving_threshold = Tc - self.save_last 
-        if (current_epoch + 1) % Tc >= saving_threshold and current_epoch != self.num_epochs:
-            print('->>>>>>>> saved checkpoint as : ' + join(self.output_folder  ,'checkpoint_{}.pth'.format(current_epoch)))
-            self.save_checkpoint(join(self.output_folder  ,'checkpoint_{}.pth'.format(current_epoch)))
-            
+        if self.rule == 'late':
+            saving_threshold = Tc - self.save_last 
+            if (current_epoch + 1) % Tc >= saving_threshold and current_epoch != self.num_epochs:
+                print('->>>>>>>> saved checkpoint as : ' + join(self.output_folder  ,'checkpoint_{}.pth'.format(current_epoch)))
+                self.save_checkpoint(join(self.output_folder  ,'checkpoint_{}.pth'.format(current_epoch)))
+
+        elif self.rule == 'sparse':
+            # $ save early checkpoint
+            early_saving_threshold = np.linspace(int(saving_threshold * 0.7) , (self.num_epochs + 1) , 7, dtype=int).tolist()
+
+            if ((current_epoch + 1) % Tc) in early_saving_threshold and current_epoch != self.num_epochs:
+                print('->>>>>>>> saved early checkpoint as: ' + join(self.output_folder, 'checkpoint_{}.pth'.format(current_epoch)))
+                self.save_checkpoint(join(self.output_folder, 'e_checkpoint_{}.pth'.format(current_epoch)))
+        else:
+            #save both early and late checkpoints
+            saving_threshold = Tc - self.save_last 
+            if (current_epoch + 1) % Tc >= saving_threshold and current_epoch != self.num_epochs:
+                print('->>>>>>>> saved checkpoint as : ' + join(self.output_folder  ,'checkpoint_{}.pth'.format(current_epoch)))
+                self.save_checkpoint(join(self.output_folder  ,'checkpoint_{}.pth'.format(current_epoch)))
+            # $ save early checkpoint
+            early_saving_threshold = np.linspace(int(saving_threshold * 0.7) , (self.num_epochs + 1) , 7, dtype=int).tolist()
+            if ((current_epoch + 1) % Tc) in early_saving_threshold and current_epoch != self.num_epochs:
+                print('->>>>>>>> saved early checkpoint as: ' + join(self.output_folder, 'checkpoint_{}.pth'.format(current_epoch)))
+                self.save_checkpoint(join(self.output_folder, 'e_checkpoint_{}.pth'.format(current_epoch)))
 
         # handle 'best' checkpointing. ema_fg_dice is computed by the logger and can be accessed like this
         if self._best_ema is None or self.logger.my_fantastic_logging['ema_fg_dice'][-1] > self._best_ema:

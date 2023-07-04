@@ -254,6 +254,9 @@ def run_training_entry():
                     help="Number of cycles in each epoch")
     parser.add_argument('-gamma', type=float, default=0.5, required=False,
                     help="Gamma value for cycle stage 2 - the learning rate scheduler will keep constant lr after [gamma] first epochs")
+    parser.add_argument('-rule', type=float, default=0.5, required=False,
+                    help="How do you want the chckpoint saving at each cycle? possible are [late,sparse,both] \n late - saves the 10 last at each cycle. \n sparse - saves 7 checkpoints starting at 0.7*Tc. \n both - saves both") 
+    
     args = parser.parse_args()
 
     assert args.device in ['cpu', 'cuda', 'mps'], f'-device must be either cpu, mps or cuda. Other devices are not tested/supported. Got: {args.device}.'
@@ -272,7 +275,7 @@ def run_training_entry():
 
     run_training(args.dataset_name_or_id, args.configuration, args.fold, args.tr, args.p, args.pretrained_weights,
                  args.num_gpus, args.use_compressed, args.npz, args.c, args.val, args.disable_checkpointing,
-                 device=device, num_epochs=args.num_epochs, num_of_cycles=args.num_of_cycles, gamma=args.gamma)
+                 device=device, num_epochs=args.num_epochs, num_of_cycles=args.num_of_cycles, gamma=args.gamma , rule=args.rule)
 
 
 if __name__ == '__main__':
