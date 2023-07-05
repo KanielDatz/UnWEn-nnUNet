@@ -12,7 +12,7 @@ our presentation is available [here](https://tome.app/project-db1e/unnunet-cljid
 Detecting segmentation model errors is **crucial** in medical imaging due to the consequences of mistakes in this field.
 Segmentation model performance is usually measured using metrics such as Intersection-Over-Union or Dice Coefficient. but these are relevant only when ground truth is present.
 **During inference, we don't have ground truth.**
-**Our goal is to introduce a method to estimate models' prediction uncertainty for medical image segmentation **
+**Our goal is to introduce a method to estimate models' prediction uncertainty for medical image segmentation**
 
 **Model** 
 
