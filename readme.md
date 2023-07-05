@@ -145,8 +145,7 @@ on inference, we first run a prediction for each checkpoint to get uncertainty m
 
 **when:**
 
-`DATASET` - dataset name or id  ## this has to be the path from raw to the dataset.json file for eample - 
-  UnnUnet_predict_from_folder -dataset Dataset500_cardiac/nnUNetTrainer__nnUNetPlans__2d/ -fold 5 -input_folder /home/danielkatz/UnnUNet/datasets/nnUNet_raw/Dataset500_cardiac/imagesTs/  -output_folder /home/danielkatz/UnnUNet/datasets/nnUNet_results/Dataset500_cardiac/nnUNetTrainer__nnUNetPlans__2d/predictions/ -rule sparse
+`DATASET` - dataset name or id 
 
 `FOLD` - which fold do you wish to train
 
