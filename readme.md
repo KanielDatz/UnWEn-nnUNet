@@ -8,18 +8,21 @@ our presentation is available [here](https://tome.app/project-db1e/unnunet-cljid
 
 # Overview
 **Motivation**
+
 Detecting segmentation model errors is **crucial** in medical imaging due to the consequences of mistakes in this field.
 Segmentation model performance is usually measured using metrics such as Intersection-Over-Union or Dice Coefficient. but these are relevant only when ground truth is present.
 **During inference, we don't have ground truth.**
-**Our goal is to introduce a method to estimate models' prediction uncertainty for medical image segmentation **
+**Our goal is to introduce a method to estimate models' prediction uncertainty for medical image segmentation**
 
 **Model** 
+
 We implemented our method on [nnUNet](https://github.com/MIC-DKFZ/nnUNet).
 nnU-Net is a semantic segmentation method that automatically adapts to a given dataset. It will analyze the provided training cases and automatically configure a matching U-Net-based segmentation pipeline. 
 nnU-Net is widely recognized for its exceptional performance in image segmentation tasks. However, one limitation of nnU-Net is the lack of a measure to indicate the possibility of failure or uncertainty, particularly in large-scale image segmentation applications with heterogeneous data. This is the issue we address in our project.
 If you are not familiar with nnUNet we advise you to take a look at [nnUNet git](https://github.com/MIC-DKFZ/nnUNet) and [paper.](https://www.nature.com/articles/s41592-020-01008-z)
 
 **Dataset**
+
 We used a [publicly available](https://cardiacmr.hms.harvard.edu/downloads-0) dataset from Harvard [Cardiac MR Center Dataverse](https://github.com/HMS-CardiacMR).
 It contains cardiac T1-weighted images for 210 patients, 5 slices per patient, and 11 T1-weighted images per slice.
 Manual contours for Epi- and Endocardial contours are provided for each T1-weighted image.
@@ -43,7 +46,7 @@ For each fold the prediction of the model is done using the checkpoint with the 
 on further 
  inference, all 5 folds are used to make predictions, the final prediction of the model is chosen by taking the prediction that has the lowest uncertainty score.
 
-# uncertainty metric
+# Uncertainty Metric
 **We implemented 3 types of uncertainty metrics:**
 - **student T-test between classes:**
 we run pixel-wise [T test](https://en.wikipedia.org/wiki/Student%27s_t-test) between the probability maps of each class.
@@ -109,6 +112,7 @@ For training each fold, run using bash:
      CUDA_VISIBLE_DEVICES=[Index of GPU] nnUNetv2_train [DATASET] 2d [FOLD] --npz -device cuda  -num_epochs [NUM_E] -num_of_cycles [Tc] -checkpoints [RULE]
 
 **When:**
+
    `Index of GPU` - choose the index of the GPU you want to run on your machine
    
    `DATASET` - dataset name or id
@@ -135,9 +139,14 @@ on inference, we first run a prediction for each checkpoint to get uncertainty m
 
  1. Make a directory with the images you wish to predict in the [nnUNet format.](documentation/dataset_format.md)
     
- 3. run: `UnnUnet_predict_from_folder -dataset DATASET -fold FOLD -input_folder INPATH -output_folder OUTPATH -rule [RULE]`
-   when:
-`DATASET` - dataset name or id
+ 3. run:
+    
+     `UnnUnet_predict_from_folder -dataset DATASET -fold FOLD -input_folder INPATH -output_folder OUTPATH -rule [RULE]`
+
+**when:**
+
+`DATASET` - dataset name or id  ## this has to be the path from raw to the dataset.json file for eample - 
+  UnnUnet_predict_from_folder -dataset Dataset500_cardiac/nnUNetTrainer__nnUNetPlans__2d/ -fold 5 -input_folder /home/danielkatz/UnnUNet/datasets/nnUNet_raw/Dataset500_cardiac/imagesTs/  -output_folder /home/danielkatz/UnnUNet/datasets/nnUNet_results/Dataset500_cardiac/nnUNetTrainer__nnUNetPlans__2d/predictions/ -rule sparse
 
 `FOLD` - which fold do you wish to train
 
