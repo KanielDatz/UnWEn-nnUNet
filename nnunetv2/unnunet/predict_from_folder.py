@@ -64,7 +64,12 @@ def predict_from_folder(dataset, fold:int , indir , outdir , rule = 'both'):
     )
 
     # creat an array of all loaded checkpoints
-    checkpoint_list = [checkpoint for checkpoint in os.listdir(join(nnUNet_results, Data_set_name)) if checkpoint.endswith('.pth')]
+
+    checkpoint_list = [checkpoint for checkpoint in os.listdir(join(nnUNet_results, Data_set_name + 'fold_' + str(fold))) if checkpoint.endswith('.pth')]
+    print('checkpoints in folder:')
+    print(checkpoint_list)
+    print('--------------------------------------')
+
     #filter acording to rule
     if rule == 'late':
         #take only checkpoints that sart with 'checkpoint_'
@@ -79,7 +84,9 @@ def predict_from_folder(dataset, fold:int , indir , outdir , rule = 'both'):
 
     #add the best checkpoint to the list
     checkpoint_list.append('checkpoint_best.pth')
-    print('rule = ' +str(rule) + ' //  checkpoints used: ' + str(checkpoint_list))
+    print('rule = ' +str(rule) + ' //  checkpoints used: ')
+    print(str(checkpoint_list))
+    print('--------------------------------------')    
     
 
     if not indir.endswith('/'):
