@@ -69,6 +69,7 @@ def predict_from_folder(dataset, fold:int , indir , outdir , rule = 'both'):
     if rule == 'late':
         #take only checkpoints that sart with 'checkpoint_'
         checkpoint_list = [checkpoint for checkpoint in checkpoint_list if checkpoint.startswith('checkpoint_')]
+        
     elif rule == 'sparse':
         # take only checkpoints that sart with 'e_checkpoint_'
         checkpoint_list = [checkpoint for checkpoint in checkpoint_list if checkpoint.startswith('e_checkpoint_')]
@@ -78,6 +79,7 @@ def predict_from_folder(dataset, fold:int , indir , outdir , rule = 'both'):
 
     #add the best checkpoint to the list
     checkpoint_list.append('checkpoint_best.pth')
+    print('rule = ' +str(rule) + ' //  checkpoints used: ' + str(checkpoint_list))
     
 
     if not indir.endswith('/'):
@@ -86,6 +88,9 @@ def predict_from_folder(dataset, fold:int , indir , outdir , rule = 'both'):
 
     #load checkpoints and save probabilities:
     for checkpoint in checkpoint_list:  
+        print("-----------------------------------")
+        print("predicting from checkpoint: " + checkpoint)
+        print("-----------------------------------")
         # initializes the network architecture, loads the checkpoint
         predictor.initialize_from_trained_model_folder(
             join(nnUNet_results, Data_set_name),
