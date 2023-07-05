@@ -43,7 +43,7 @@ For each fold the prediction of the model is done using the checkpoint with the 
 on further 
  inference, all 5 folds are used to make predictions, the final prediction of the model is chosen by taking the prediction that has the lowest uncertainty score.
 
-# uncertainty metric
+# Uncertainty Metric
 **We implemented 3 types of uncertainty metrics:**
 - **student T-test between classes:**
 we run pixel-wise [T test](https://en.wikipedia.org/wiki/Student%27s_t-test) between the probability maps of each class.
