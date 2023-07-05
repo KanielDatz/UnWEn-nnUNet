@@ -22,6 +22,7 @@ nnU-Net is widely recognized for its exceptional performance in image segmentati
 If you are not familiar with nnUNet we advise you to take a look at [nnUNet git](https://github.com/MIC-DKFZ/nnUNet) and [paper.](https://www.nature.com/articles/s41592-020-01008-z)
 
 **Dataset**
+
 We used a [publicly available](https://cardiacmr.hms.harvard.edu/downloads-0) dataset from Harvard [Cardiac MR Center Dataverse](https://github.com/HMS-CardiacMR).
 It contains cardiac T1-weighted images for 210 patients, 5 slices per patient, and 11 T1-weighted images per slice.
 Manual contours for Epi- and Endocardial contours are provided for each T1-weighted image.
