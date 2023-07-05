@@ -109,6 +109,7 @@ For training each fold, run using bash:
      CUDA_VISIBLE_DEVICES=[Index of GPU] nnUNetv2_train [DATASET] 2d [FOLD] --npz -device cuda  -num_epochs [NUM_E] -num_of_cycles [Tc] -checkpoints [RULE]
 
 **When:**
+
    `Index of GPU` - choose the index of the GPU you want to run on your machine
    
    `DATASET` - dataset name or id
