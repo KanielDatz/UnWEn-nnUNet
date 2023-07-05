@@ -49,6 +49,7 @@ def predict_from_folder(dataset, fold:int , indir , outdir , rule = 'both'):
         
     # provide relevant folder names for prediction and weights exctraction:
     Data_set_name = maybe_convert_to_dataset_name(dataset)
+    Data_set_name = Data_set_name + "/nnUNetTrainer__nnUNetPlans__2d/"
 
     # initiate the nnUNetPredictor
     predictor = nnUNetPredictor(
