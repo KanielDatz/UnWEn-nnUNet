@@ -108,7 +108,7 @@ For training each fold, run using bash:
 
      CUDA_VISIBLE_DEVICES=[Index of GPU] nnUNetv2_train [DATASET] 2d [FOLD] --npz -device cuda  -num_epochs [NUM_E] -num_of_cycles [Tc] -checkpoints [RULE]
 
--**When:**
+**When:**
    `Index of GPU` - choose the index of the GPU you want to run on your machine
    
    `DATASET` - dataset name or id
@@ -135,8 +135,10 @@ on inference, we first run a prediction for each checkpoint to get uncertainty m
 
  1. Make a directory with the images you wish to predict in the [nnUNet format.](documentation/dataset_format.md)
     
- 3. run: `UnnUnet_predict_from_folder -dataset DATASET -fold FOLD -input_folder INPATH -output_folder OUTPATH -rule [RULE]`
-   when:
+ 3. run:
+     `UnnUnet_predict_from_folder -dataset DATASET -fold FOLD -input_folder INPATH -output_folder OUTPATH -rule [RULE]`
+    
+ *when:*
 `DATASET` - dataset name or id
 
 `FOLD` - which fold do you wish to train
