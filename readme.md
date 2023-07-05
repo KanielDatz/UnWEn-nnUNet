@@ -140,6 +140,7 @@ on inference, we first run a prediction for each checkpoint to get uncertainty m
  1. Make a directory with the images you wish to predict in the [nnUNet format.](documentation/dataset_format.md)
     
  3. run:
+    
      `UnnUnet_predict_from_folder -dataset DATASET -fold FOLD -input_folder INPATH -output_folder OUTPATH -rule [RULE]`
 
 **when:**
