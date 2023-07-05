@@ -8,12 +8,14 @@ our presentation is available [here](https://tome.app/project-db1e/unnunet-cljid
 
 # Overview
 **Motivation**
+
 Detecting segmentation model errors is **crucial** in medical imaging due to the consequences of mistakes in this field.
 Segmentation model performance is usually measured using metrics such as Intersection-Over-Union or Dice Coefficient. but these are relevant only when ground truth is present.
 **During inference, we don't have ground truth.**
 **Our goal is to introduce a method to estimate models' prediction uncertainty for medical image segmentation **
 
 **Model** 
+
 We implemented our method on [nnUNet](https://github.com/MIC-DKFZ/nnUNet).
 nnU-Net is a semantic segmentation method that automatically adapts to a given dataset. It will analyze the provided training cases and automatically configure a matching U-Net-based segmentation pipeline. 
 nnU-Net is widely recognized for its exceptional performance in image segmentation tasks. However, one limitation of nnU-Net is the lack of a measure to indicate the possibility of failure or uncertainty, particularly in large-scale image segmentation applications with heterogeneous data. This is the issue we address in our project.
