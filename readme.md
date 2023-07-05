@@ -137,8 +137,9 @@ on inference, we first run a prediction for each checkpoint to get uncertainty m
     
  3. run:
      `UnnUnet_predict_from_folder -dataset DATASET -fold FOLD -input_folder INPATH -output_folder OUTPATH -rule [RULE]`
-    
- *when:*
+
+**when:**
+
 `DATASET` - dataset name or id
 
 `FOLD` - which fold do you wish to train
