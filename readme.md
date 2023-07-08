@@ -8,6 +8,25 @@ you are welcome to read our [report](https://github.com/KanielDatz/UnnUNet/blob/
 <img width="600" alt="gif" src="https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/assets/gif.gif?raw=true">
 
 
+# **Agenda**
+1. **overview**
+     - Motivation
+     - Model
+     - Dataset
+2. **Approach**
+3. **Uncertainty Metric**
+    - Student T-test between classes
+    - Entropy between classes
+    - Entropy between all predictions
+5. **Our files and modifications**
+6. **How to use**
+     - Install
+     - Train
+     - Inference
+7. **Evaluate Performance**
+8. **Acknowledgements**
+
+
 # Overview
 **Motivation**
 
@@ -50,16 +69,16 @@ on further
 
 # Uncertainty Metric
 **We implemented 3 types of uncertainty metrics:**
-- **student T-test between classes:**
+- **Student T-test between classes:**
 we run pixel-wise [T test](https://en.wikipedia.org/wiki/Student%27s_t-test) between the probability maps of each class.
 for n checkpoints, we will have a group of n probabilities for each class for each pixel. so we can run a statistical hypothesis test the assumption H0: the two classes come from the same distribution. 
 after running the test we get the P value map - we then set  the pixels where the P value is lower than 5% to null.
 
-- **entropy between classes:**
+- **Entropy between classes:**
 After obtaining the mean probability maps through ensembling (considering all saved checkpoints), we calculated the entropy value for each pixel.
 <img width="600" alt="Cyclic lr" src="https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/assets//entropyclasses.png?raw=true">
 
-- **entropy between all predictions:**
+- **Entropy between all predictions:**
 we calculate entropy on **all** prediction and **all** classes for each pixel.
 <img width="600" alt="Cyclic lr" src="https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/assets//entropyNM.png?raw=true">
 
@@ -179,7 +198,7 @@ on inference, we first run a prediction for each checkpoint to get uncertainty m
 
 `--outpot_pred_path` path to the folder where the predictions will be saved. default is `proba_dir + /unnunet_pred`
 
-# Preformance
+# Evaluate Performance
 To visualize results and evaluate uncertainty reliability you can use: `nnunetv2\unnunet\visualize_results_and_correlation.ipynb`
 - **when does the score fail?**
   
