@@ -3,7 +3,9 @@ TL;DR - *We propose a method of measuring segmentation model performance when gr
 
 **This repository is a part of our final project in [EE046211 Deep Learning course](https://github.com/taldatech/ee046211-deep-learning) in the [Technion - Israel Institute of Technology](https://en.wikipedia.org/wiki/Technion_%E2%80%93_Israel_Institute_of_Technology)
 By [Daniel Katz](https://www.linkedin.com/in/danielkatz10/https://www.linkedin.com/in/danielkatz10/) and [Natalie Mendelson](https://www.linkedin.com/in/natalie-mendelson-b59646234/https://www.linkedin.com/in/natalie-mendelson-b59646234/), spring 2023**
-our presentation is available [here](https://tome.app/project-db1e/unnunet-cljid6bos1ij5pm3dapzj8tmz) and a video in Hebrew is available [here](https://youtu.be/_wcqZOEGk_0)
+you are welcome to read our [report](https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/Estimating%20Uncertainty%20in%20nnUnet.pdf) , our presentation is available [here](https://tome.app/project-db1e/unnunet-cljid6bos1ij5pm3dapzj8tmz) and a video in Hebrew is available [here](https://youtu.be/_wcqZOEGk_0)
+
+<img width="600" alt="gif" src="https://github.com/KanielDatz/UnnUNet/blob/master/UnnUnet_documentation/assets/gif.gif?raw=true">
 
 
 # Overview
