@@ -79,6 +79,7 @@ We tended to mark our changes with commenting #$ within the code files of nnUNet
 |`nnunetv2\unnunet\predict_from_folder.py`| prediction using multiple checkpoints|
 |`nnunetv2\unnunet\run_uncertainty_on_fold.py`| uncertainty map calculation|
 |`nnunetv2\unnunet\uncertainty_utils.py`|utilities for UnnUNet|
+|`nnunetv2\unnunet\visualize_results_and_correlation.ipynb`|jupyter nb which you can use to visualize results and calc correlation  between dice and uncertainty |
 
 
 # How to use
