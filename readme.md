@@ -176,7 +176,12 @@ on inference, we first run a prediction for each checkpoint to get uncertainty m
 `--score_type` The score type to use for the uncertainty score. default is `class_entropy` - other options are `total_entropy` and `t_test`
 
 `--outpot_pred_path` path to the folder where the predictions will be saved. default is `proba_dir + /unnunet_pred`
-   
+
+# Preformance
+To visualize results and evaluate uncertainty reliability you can use: `nnunetv2\unnunet\visualize_results_and_correlation.ipynb`
+- when does the score fail?
+  
+
 # Acknowledgements
 Our teachers:
 -   **Prof. Daniel Soudry and TA Tal Daniel.** Electrical and Computer Engineering Department, Technion
