@@ -4,10 +4,12 @@ import matplotlib.pyplot as plt
 import nibabel as nib
 import pandas as pd
 import cv2
-import uncertainty_utils as uu
+import nnunetv2
+from nnunetv2.unnunet.uncertainty_utils import *
 import os
 import shutil
 
+#$ this script is used to compute the uncertainty score for a given dataset, after prediction was done.
 
 #proba_dir ='' ### the folder with the checkpoints folders (output of previous script)
 #raw_path ='' ##path to the folder with the dataset the user wants to predict ( input of previous script)
@@ -17,7 +19,7 @@ import shutil
 def run_uncertainty_on_fold(proba_dir, raw_path,score_type , labels , outpot_pred_path = False):
     dice_list = []
     uncertainty_scors = []
-    name_list = [name.split('.')[0] for name in os.listdir(raw_path)]
+    name_list = [name.split('.')[0].replace('_0000','') for name in os.listdir(raw_path)]
 
     for image_name in name_list:
         #compute p values map for the image
@@ -41,29 +43,31 @@ def run_uncertainty_on_fold(proba_dir, raw_path,score_type , labels , outpot_pre
         mask = (np.mean(class1_array, axis=0).T > 0.5).astype(np.uint8)
         map = np.zeros_like(mask)
         if score_type == 't_test':
-            p_values_map = uu.T_test_on_single_image(class0_array, class1_array, plot_results = False)
-            uncertainty_score = uu.uncertainty_from_mask_and_valmap(p_values_map ,  mask)
+            p_values_map = T_test_on_single_image(class0_array, class1_array, plot_results = False)
+            uncertainty_score = uncertainty_from_mask_and_valmap(p_values_map ,  mask)
             map = p_values_map
 
         elif score_type == 'class_entropy':
-            class_entropy_map = uu.entropy_map_fun(np.mean(class1_array,axis = 0), np.mean(class0_array,axis = 0))
-            uncertainty_score = uu.uncertainty_from_mask_and_valmap(class_entropy_map ,  mask)
+            class_entropy_map = entropy_map_fun(np.mean(class1_array,axis = 0), np.mean(class0_array,axis = 0))
+            uncertainty_score =  uncertainty_from_mask_and_valmap(class_entropy_map ,  mask)
             map = class_entropy_map
         elif score_type == 'total_entropy':
             #append class one and class two on axis 0
-            class0_array.concatenate(class1_array, axis = 0)
+            np.concatenate((class0_array, class1_array), axis = 0)
             total_entropy_map = -np.sum(class0_array * np.log(class0_array), axis=0)
-            uncertainty_score = uu.uncertainty_from_mask_and_valmap(total_entropy_map ,  mask)
+            uncertainty_score =  uncertainty_from_mask_and_valmap(total_entropy_map ,  mask)
             map = total_entropy_map
 
         uncertainty_scors.append(uncertainty_score)
         if labels:
-            label = uu.load_niigii_file(labels + '/' + image_name + '.nii.gz')
-            temp_dice =  uu.dice(mask , label)
+            label =  load_niigii_file(labels + '/' + image_name + '.nii.gz')
+            temp_dice =   dice(mask , label)
             dice_list.append(temp_dice)
         
         if not outpot_pred_path:
             outpot_pred_path = proba_dir + '/unnunet_pred'
+        if not os.path.exists(outpot_pred_path):
+            os.makedirs(outpot_pred_path)
 
         #copy prediction mask
         predicted_mask = proba_dir + '/checkpoint_best/' + image_name + '.nii.gz'
