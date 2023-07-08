@@ -179,7 +179,8 @@ on inference, we first run a prediction for each checkpoint to get uncertainty m
 
 # Preformance
 To visualize results and evaluate uncertainty reliability you can use: `nnunetv2\unnunet\visualize_results_and_correlation.ipynb`
-- when does the score fail?
+- **when does the score fail?**
+  
  Overall, we see that it works when the prediction is ‘on the right track, but not there yet’ or ‘somehow right but not exactly’, but it doesn’t work when the prediction is entirely wrong.
 If you wish to see failure examples - head to `nnunetv2\unnunet\visualize_results_and_correlation.ipynb` and read 'Where does the uncertainty metric fail to predict model performance?' in `UnnUnet_documentation\Estimating Uncertainty in nnUnet.pdf`
 
